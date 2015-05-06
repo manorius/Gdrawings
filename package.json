@@ -1,0 +1,59 @@
+{
+  "name": "gcode-simulator",
+  "version": "0.0.2",
+  "description": "Simulate a cnc machine",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tmpvar/gcode-simulator.git"
+  },
+  "keywords": [
+    "cnc",
+    "gcode",
+    "simulator",
+    "svg"
+  ],
+  "bin": {
+    "gcode-simulator": "bin/gcode-simulator.js"
+  },
+  "author": {
+    "name": "Elijah Insua",
+    "email": "tmpvar@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "node-chrome": "https://github.com/tmpvar/node-chrome/archive/master.tar.gz",
+    "optimist": "~0.3.5"
+  },
+  "readme": "# gcode-simulator\n\nWebgl based gcode simulator\n\n## Uses\n\n### from the command line\n\nFirst, install `npm install -g gcode-simulator`\n\nnow you can execute the `gcode-simulator` command at your prompt.  If you want to stream gcode to the simulator add a `-i`.\n\n_example_: `curl http://www.clker.com/cliparts/O/H/c/W/A/o/plane.svg | node bin/svgmill.js | gcode-simulator`\n\nwhere `svgmill.js` turns svg into gcode\n\n### from the web\n\nopen index.html in a webgl capable browser\n\n## License\n\nMIT",
+  "readmeFilename": "README.md",
+  "_id": "gcode-simulator@0.0.2",
+  "dist": {
+    "shasum": "271972fedd71f78eb0b2664fffc018cd61968163",
+    "tarball": "http://registry.npmjs.org/gcode-simulator/-/gcode-simulator-0.0.2.tgz"
+  },
+  "_npmVersion": "1.1.65",
+  "_npmUser": {
+    "name": "tmpvar",
+    "email": "tmpvar@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "tmpvar",
+      "email": "tmpvar@gmail.com"
+    }
+  ],
+  "_shasum": "271972fedd71f78eb0b2664fffc018cd61968163",
+  "_resolved": "https://registry.npmjs.org/gcode-simulator/-/gcode-simulator-0.0.2.tgz",
+  "_from": "gcode-simulator@*",
+  "bugs": {
+    "url": "https://github.com/tmpvar/gcode-simulator/issues"
+  },
+  "homepage": "https://github.com/tmpvar/gcode-simulator"
+}

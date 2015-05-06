@@ -1,0 +1,174 @@
+<html>
+<head>
+  <title>WebGL Gcode simulator</title>
+  <link rel="shortcut icon" href="http://tmpvar.com/project/gcode-simulator/img/favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+  <script type="text/javascript" src="js/three.js"></script>
+  <script type="text/javascript" src="js/gcode-simulator.js"></script>
+  <script type="text/javascript" src="js/machine.js"></script>
+  <script type="text/javascript" src="js/stats.js"></script>
+  <script type="text/javascript" src="js/vec2.js"></script>
+  <script type="text/javascript" src="js/SVGReader.js"></script>
+  <script type="text/javascript" src="js/svg2gcode.js"></script>
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <style>
+
+    .pane {
+      background-color: #f0f0f0;
+      border: 1px solid #d0d0d0;
+      margin-top: 20px;
+    }
+    .left10px {
+      padding-left: 10px;
+    }
+
+    .top10px {
+      padding-top: 10px;
+    }
+
+    .options {
+      border-bottom: 1px solid #a0a0a0;
+      padding-bottom:20px;
+      background: #a0a0a0;
+    }
+
+    .options .pane {
+      border: 1px solid #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <section class="row options" style="display:none">
+    <section class="span4 pane"  >
+      <h3 class="left10px">workarea extents</h3>
+        <p>
+          <label class="span1">X</label>
+          <input class="span1" name="xmin" type="text" value="0" />
+          <input class="span1" type="text" name="xmax"  value="600"/>
+        </p>
+        <p>
+          <label class="span1">Y</label>
+          <input class="span1" name="ymin" type="text" value="0" />
+          <input class="span1" type="text" name="ymax" value="600" />
+        </p>
+        <p>
+          <label class="span1">Z</label>
+          <input class="span1" name="zmin" type="text" value="0" />
+          <input class="span1" type="text" name="zmax" value="150"/>
+        </p>
+    </section>
+
+
+    <section class=" span4 pane">
+      <h3 class="left10px">tooling</h3>
+        <p>
+          <label class="span2">Safe Z</label><input class="span1" name="safeZ" type="text" value="142" />
+        </p>
+        <p>
+          <label class="span2">Cut Z</label><input class="span1" name="cutZ" type="text" value="144" />
+        </p>
+        <p>
+          <label class="span2">Material Width</label><input class="span1" name="materialWidth" type="text" value="5.04" />
+        </p>
+        <p>
+          <label class="span2">Feed Rate</label> <input class="span1" name="feedRate" type="text" value="900" />
+        </p>
+       <p>
+          <label class="span2">Seek Rate</label> <input class="span1" name="seekRate" type="text" value="900" />
+        </p>
+    </section>
+    <section class=" span4 pane">
+      <h3 class="left10px">simulation speed</h3>
+        <p>
+          <label class="span2">Percent</label><input class="span1" name="z-safe" type="text" value="100" />
+        </p>
+    </section>
+  </section>
+  <section class="row span12">
+    <section class="span4">
+      <h1>gcode simulator</h1>
+      <p>This is a small utility that tests the viability of gcode for a cnc machine!</p>
+      <h2>Usage</h2>
+      <p>
+        Either paste some svg into the svg box or gcode into the gcode box.  The 3d model on the right will animate the steps the machine should take, while leaving a trail of cuts.
+      </p>
+    </section>
+
+    <section class="offset2 span4">
+      <h2>meta</h2>
+      <p>created by <a href="http://twitter.com/tmpvar">@tmpvar</a></p>
+
+    </section>
+
+  </section>
+
+  <section class="row">
+    <section class="span6">
+      <section class="span5 pane left10px top10px">
+        <h2>svg<h2>
+        <textarea id="svg" class="span5" rows="11"></textarea>
+      </section>
+      <section class="span5 pane left10px top10px" id="editor">
+        <h2>gcode</h2>
+        <textarea id="gcode" class="span5" rows="11"></textarea>
+      </section>
+    </section>
+    <section class="span6 pane" id="3d" ></section>
+  </section>
+
+
+  <script>
+    $(function() {
+      console.log('ready');
+
+
+      // setup the gcode input
+      var gcodeElement =document.getElementById('gcode');
+      var gcodes = gcodeElement.value;
+      machine.fromString(gcodes);
+      machine.begin(function() { console.log('done'); });
+
+      var changing = false;
+      gcodeElement.addEventListener('keyup', function() {
+        if (gcodes !== gcodeElement.value) {
+          clearTimeout(changing);
+          changing = setTimeout(function() {
+            gcodes = gcodeElement.value;
+            machine.cancel();
+            machine.fromString(gcodes);
+            machine.begin(function() {
+              console.log('done');
+            });
+          }, 1000);
+        }
+      });
+
+
+
+      $('#svg').on('keyup', function() {
+        console.log('here')
+        $('#gcode').val(svg2gcode(document.getElementById('svg').value, {
+          scale : 1,
+          cutZ : 108,
+          safeZ: 80
+        }));
+
+        machine.cancel();
+        machine.fromString($('#gcode').val());
+        machine.begin(function() { console.log('done'); });
+      });
+    });
+  </script>
+  <script type="text/javascript" src="js/renderer.js"></script>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-633948-2']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</body>
+</html>
